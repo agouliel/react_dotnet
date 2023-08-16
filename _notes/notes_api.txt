@@ -1,0 +1,107 @@
+https://dotnet.microsoft.com/en-us/apps/aspnet/apis
+
+https://learn.microsoft.com/en-gb/training/paths/aspnet-core-minimal-api/
+(3 modules)
+
+https://learn.microsoft.com/en-gb/training/modules/build-web-api-minimal-api/2-what-is-minimal-api
+dotnet new web -o PizzaStore -f net6.0
+Db.cs (in-memory)
+Program.cs: using PizzaStore.DB;
+
+https://learn.microsoft.com/en-gb/training/modules/build-web-api-minimal-database/3-exercise-add-entity-framework-core
+Pizza.cs (model)
+dotnet add package Microsoft.EntityFrameworkCore.InMemory --version 6.0
+class PizzaDb : DbContext (in the model file)
+(override the random port selection behavior: launchSettings.json)
+
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version 6.0
+Program.cs:
+  var connectionString = builder.Configuration.GetConnectionString("Pizzas") ?? "Data Source=Pizzas.db";
+  builder.Services.AddSqlite<PizzaDb>(connectionString);
+
+https://learn.microsoft.com/en-gb/training/modules/build-web-api-minimal-spa/5-exercise-create-api
+package.json: "proxy": "http://localhost:5059",
+
+------------------------------
+
+https://learn.microsoft.com/en-us/aspnet/core/fundamentals/apis
+
+https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-web-api
+dotnet new webapi -o TodoApi
+dotnet add package Microsoft.EntityFrameworkCore.InMemory
+
+1. Models/TodoItem.cs
+2. Models/TodoCtx.cs
+3. Program.cs: builder.Services.AddDbContext<TodoCtx>(opt => opt.UseInMemoryDatabase("TodoList"));
+4. dotnet aspnet-codegenerator controller -name TodoItemsController -async -api -m TodoItem -dc TodoCtx -outDir Controllers
+
+https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-mongo-app
+dotnet new webapi -o BookStoreApi
+dotnet add package MongoDB.Driver
+
+1. appsettings.json
+2. Models/DbSettings
+3. Program.cs: builder.Services.Configure<DbSettings>(builder.Configuration.GetSection("Db"));
+
+https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api
+dotnet new web -o TodoMinApi
+dotnet add package Microsoft.EntityFrameworkCore.InMemory
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 6.0.0
+dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+
+1. Todo.cs (no Models folder - like Weatherforecasts)
+2. TodoDb.cs (context)
+3. Program.cs:
+  builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
+  app.MapGet("/todoitems", async (TodoDb db) => await db.Todos.ToListAsync()); (no controller)
+
+------------------------------
+
+https://learn.microsoft.com/en-us/ef/core/get-started/overview/first-app
+dotnet new console -o EFGetStarted
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+
+1. Model.cs (includes models and context)
+2. dotnet ef migrations add InitialCreate
+3. Program.cs: using var db = new BloggingContext();
+
+------------------------------
+
+https://learn.microsoft.com/en-us/aspnet/core/tutorials/razor-pages/razor-pages-start
+dotnet new webapp -o RazorPagesMovie
+
+
+https://learn.microsoft.com/en-us/aspnet/core/tutorials/razor-pages/model
+1. Models/Movie.cs
+2. dotnet aspnet-codegenerator razorpage -m Movie -dc RazorPagesMovie.Data.RazorPagesMovieContext -udl -outDir Pages/Movies --referenceScriptLibraries --databaseProvider sqlite
+  a. creates Pages/Movies
+  b. creates Data/RazorPagesMovieContext.cs
+3. Program.cs:
+  a. builder.Services.AddDbContext<RazorPagesMovieContext>(options =>
+        options.UseSqlite(builder.Configuration.GetConnectionString("RazorPagesMovieContext")));
+  b. builder.Services.AddDbContext<RazorPagesMovieContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("ProductionMovieContext")));
+4. dotnet ef migrations add InitialCreate
+
+------------------------------
+
+https://learn.microsoft.com/en-us/aspnet/core/data/ef-rp/intro
+dotnet new webapp -o ContosoUniversity
+
+1. Models/Student.cs
+2. dotnet aspnet-codegenerator razorpage -m Student -dc ContosoUniversity.Data.SchoolContext -udl -outDir Pages/Students --referenceScriptLibraries -sqlite
+  a. creates pages
+  b. creates Data/SchoolContext.cs
+  c. adds the context to dependency injection in Program.cs
+  d. adds a database connection string to appsettings.json
+
+------------------------------
+
+https://www.egabriel.dev/2022/06/11/minimalnet6withsqlserver/
+
+1. TodoItem (model)
+2. DataContext
+3. appsetting.Development.json (connection string)
+4. Program.cs: builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+5. routes (passed in DataContext as a dependency to the RequestDelegate, to access the database)

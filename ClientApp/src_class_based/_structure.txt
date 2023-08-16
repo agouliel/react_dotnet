@@ -1,0 +1,16 @@
+   BrowserRouter
+	|
+	|
+	\/
+       App
+	|
+	|
+	\/
+      Layout
+      /   \
+     /     \
+NavMenu    Container
+		|
+		|
+		\/
+	      Routes

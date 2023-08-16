@@ -1,0 +1,66 @@
+https://learn.microsoft.com/en-us/aspnet/core/client-side/spa/react
+
+dotnet new react -o my-new-app
+export ASPNETCORE_ENVIRONMENT=Development
+dotnet run
+
+(extra folders compared to API: ClientApp, Pages, Services)
+
+----------------------------
+
+Microsoft.AspNetCore.Server.Kestrel[0]
+      Unable to start Kestrel.
+      System.InvalidOperationException: Unable to configure HTTPS endpoint. No server certificate was specified, and the default developer certificate could not be found or is out of date.
+      To generate a developer certificate run 'dotnet dev-certs https'. To trust the certificate (Windows and macOS only) run 'dotnet dev-certs https --trust'.
+      For more information on configuring HTTPS see https://go.microsoft.com/fwlink/?linkid=848054.
+
+dotnet dev-certs https --trust
+Trusting the HTTPS development certificate was requested. If the certificate is not already trusted we will run the following command:
+'sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain <<certificate>>'
+This command might prompt you for your password to install the certificate on the system keychain.
+
+----------------------------
+
+AFTER INSTALLING A LATER .NET VERSION:
+
+A fatal error occurred. The required library libhostfxr.dylib could not be found.
+- If this is a self-contained application, that library should exist in [/Users/agou/Desktop/react_projects/react_dotnet/my-new-app/bin/Debug/net5.0/].
+- If this is a framework-dependent application:
+  + install the runtime in the global location [/usr/local/share/dotnet/x64]
+  + or use the DOTNET_ROOT environment variable to specify the runtime location
+  + or register the runtime location in [/etc/dotnet/install_location].
+
+The .NET runtime can be found at:
+  - https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch=x64&rid=osx.11.2-x64&apphost_version=5.0.17
+
+----------------------------
+
+With .NET 6 the file Startup.cs is not created any more
+(plus "using" directives are not used)
+
+----------------------------
+
+ACCESS THE API:
+
+https://localhost:port/weatherforecast
+(proxy address works too)
+
+----------------------------
+
+https://github.com/remix-run/react-router/discussions/9481
+
+let router = createBrowserRouter(routes, { basename: "/base" })
+
+----------------------------
+
+ADD A NEW SOURCE FROM DATABASE AND A RESPECTIVE PAGE:
+
+1. Add model
+2. Add context
+3. Connection string in appsettings.json
+4. Program.cs: builder.Services.AddDbContext (using context and connection string)
+5. Add controller (this determines the backend API URL)
+6. Add URL in setupProxy.js (so it works in the frontend URL too)
+7. Add component
+8. Add route in AppRoutes.js
+9. Add link in NavMenu.js

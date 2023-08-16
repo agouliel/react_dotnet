@@ -1,0 +1,19 @@
+function MyRoutes() {
+return (
+  <Routes>
+  {AppRoutes.map((route, index) => {
+    const { element, ...rest } = route;
+    return <Route key={index} {...rest} element={element} />;
+  })}
+  </Routes>
+)
+}
+
+export default function App() {
+    return (
+      <BrowserRouter>
+      <Layout>
+          <MyRoutes />
+      </Layout>
+      </BrowserRouter>
+    );
