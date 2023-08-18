@@ -45,8 +45,13 @@ dotnet add package MongoDB.Driver
 
 https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api
 dotnet new web -o TodoMinApi
+
+dotnet dev-certs https --trust
+
 dotnet add package Microsoft.EntityFrameworkCore.InMemory
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 6.0.0
+  (version 7 might be needed, even if .NET is version 6)
+  (along with TrustServerCertificate=True in the connection string)
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 
 1. Todo.cs (no Models folder - like Weatherforecasts)

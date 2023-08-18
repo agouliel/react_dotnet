@@ -7,6 +7,8 @@ import {
   Route,
   RouterProvider,
 } from 'react-router-dom';
+import ApiProvider from './contexts/ApiProvider'
+
 
 const router = createBrowserRouter(
   [
@@ -28,6 +30,8 @@ const router = createBrowserRouter(
 
 export default function App() {
     return (
+      <ApiProvider>
       <RouterProvider router={router} />
+      </ApiProvider>
     );
 }

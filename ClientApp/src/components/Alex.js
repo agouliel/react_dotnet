@@ -1,24 +1,21 @@
 import { useState, useEffect } from 'react';
-
-async function populateData() {
-  const response = await fetch('todoitems');
-  const data = await response.json();
-  return { forecasts: data, loading: false };
-}
+import { useApi } from '../contexts/ApiProvider';
 
 export default function Alex() {
-
   const [currentState, setCurrentState] = useState({ forecasts: [], loading: true })
+  const api = useApi();
 
-  //componentDidMount() {this.populateWeatherData();}
-  useEffect(
-    function () {
-      populateData().then(
-        (weatherData) => setCurrentState(weatherData)
-      )
-    },
-    []
-  )
+  useEffect(() => {
+    (async () => {
+      const response = await api.get('todoitems');
+      if (response.ok) {
+        setCurrentState({ forecasts: response.body, loading: false });
+      }
+      else {
+        setCurrentState({ forecasts: null, loading: false });
+      }
+    })();
+  }, [api]);
 
   function renderForecastsTable(forecasts) {
     return (
@@ -39,9 +36,7 @@ export default function Alex() {
     );
   }
 
-    let contents = currentState.loading
-      ? <p><em>Loading...</em></p>
-      : renderForecastsTable(currentState.forecasts);
+    let contents = currentState.loading ? <p><em>Loading...</em></p> : renderForecastsTable(currentState.forecasts);
 
     return (
       <div>
